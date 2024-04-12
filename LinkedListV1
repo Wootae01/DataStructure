@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_LEN 20
+
+typedef struct _Node_ {
+	char data[MAX_LEN];
+	struct _Node_* next;
+
+} Node;
+
+typedef struct _LinkedList_ {
+	Node* head;
+	int numOfData;
+} LinkedList;
+
+LinkedList* createLinkedList() {
+	LinkedList* list = (LinkedList*)calloc(1, sizeof(LinkedList));
+	list->head = NULL;
+	list->numOfData = 0;
+	return list;
+}
+
+void freeList(LinkedList* pList) {
+	Node* cur;
+	while (cur != NULL) {
+		cur = pList->head;
+		pList->head = cur->next;
+		free(cur);
+		cur = NULL;
+	}
+}
+
+void printList(LinkedList* pList) {
+	Node* cur = pList->head;
+	printf("(");
+	while (cur != NULL) {
+		printf("%s", cur->next);
+		
+		cur = cur->next;
+		if (cur != NULL) {
+			printf(", ");
+		}
+	}
+	printf(")\n");
+}
+
+void insertFirstNode(LinkedList* pList, char* x) {
+	Node* newNode = (Node*)malloc(sizeof(newNode));
+	strcpy_s(newNode->data, strlen(x) + 1, x);
+
+	newNode->next = pList->head;
+	pList->head = newNode;
+	pList->numOfData += 1;
+}
+
+void insertLastNode(LinkedList* pList, char* x) {
+	Node* newNode = (Node*)malloc(sizeof(newNode));
+	Node* tmp;
+	strcpy_s(newNode->data, strlen(x) + 1, x);
+
+	if (pList->head == NULL) {
+		pList->head = newNode;
+	}
+
+	tmp = pList->head;
+	while (tmp->next != NULL) {
+		tmp = tmp->next;
+	}
+	tmp->next = newNode;
+	pList->numOfData += 1;
+}
+
+void insertMiddleNode(LinkedList* pList, Node* pre, char* x) {
+	Node* newNode = (Node*)calloc(1, sizeof(Node));
+	strcpy_s(newNode->data, strlen(x) + 1, x);
+	
+	newNode->next = pre->next;
+	pre->next = newNode;
+}
+
+void delete(LinkedList* pList, Node* target) {
+	if (pList == NULL) {
+		fprintf(stderr, "연결리스트가 비어있습니다.");
+		return;
+	}
+	else if (pList->head == target) {
+		pList->head = target->next;
+		free(target);
+	}
+
+	else {
+		Node* tmp = pList->head;
+		while (tmp->next != target) {
+			tmp = tmp->next;
+		}
+
+		tmp->next = target->next;
+		free(target);
+	}
+
+}
+
+Node* searchNode(LinkedList* pList, char* x) {
+	Node* tmp = pList->head;
+
+	while (tmp != NULL) {
+		if (strcmp(tmp, x) == 0) {
+			return tmp;
+		}
+		tmp = tmp->next;
+	}
+	return tmp;
+}
