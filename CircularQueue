@@ -20,7 +20,7 @@ CQueue* createQueue() {
 	return tmp;
 }
 
-CQueue* isEmpty(CQueue* cq) {
+int isEmpty(CQueue* cq) {
 	if (cq->front == cq->rear) {
 		printf("Queue is empty");
 		return TRUE;
@@ -29,7 +29,7 @@ CQueue* isEmpty(CQueue* cq) {
 	return FALSE;
 }
 
-CQueue* isFull(CQueue* cq) {
+int isFull(CQueue* cq) {
 	if (cq->front == (cq->rear + 1) % CQ_SIZE) {
 		printf("Queue is FULL");
 		return TRUE;
