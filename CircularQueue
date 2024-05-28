@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define CQ_SIZE 4
+#define TRUE 1
+#define FALSE 0
+
+typedef char element;
+
+typedef struct _CQueue {
+	element queue[CQ_SIZE];
+	int front;
+	int rear;
+}CQueue;
+
+CQueue* createQueue() {
+	CQueue* tmp = (CQueue*)malloc(sizeof(CQueue));
+	tmp->front = 0;
+	tmp->rear = 0;
+	return tmp;
+}
+
+CQueue* isEmpty(CQueue* cq) {
+	if (cq->front == cq->rear) {
+		printf("Queue is empty");
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+CQueue* isFull(CQueue* cq) {
+	if (cq->front == (cq->rear + 1) % CQ_SIZE) {
+		printf("Queue is FULL");
+		return TRUE;
+	}
+	return FALSE;
+}
+
+void enQueue(CQueue* cq, element item) {
+	if (isFull(cq)) {
+		return;
+	}
+	cq->rear = (cq->rear + 1) % CQ_SIZE;
+	cq->queue[cq->rear] = item;
+}
+
+element deQueue(CQueue* cq) {
+	if (isEmpty(cq)) {
+		return;
+	}
+	cq->front = (cq->front + 1) % CQ_SIZE;
+	return cq->queue[cq->front];
+}
+
+element peek(CQueue* cq) {
+	if (isEmpty(cq)) {
+		return;
+	}
+
+	return cq->queue[(cq->front + 1) % CQ_SIZE];
+}
+
+void printQ(CQueue* cq) {
+
+	int start = (cq->front + 1) % CQ_SIZE;
+	int end = (cq->rear + 1) % CQ_SIZE;
+
+	printf("CQueue : [");
+	while (start != end) {
+		printf("%3c", cq->queue[start]);
+		start = (start + 1) % CQ_SIZE;
+	}
+	printf("  ]");
+}
+
+void main(void) {
+	CQueue* cQ = createQueue();  // 큐 생성
+	element data;
+
+	printf("\n **** 원형 큐 연산 ***** \n");
+
+	printf("\n 삽입 A>>"); enQueue(cQ, 'A'); printQ(cQ);
+	printf("\n 삽입 B>>"); enQueue(cQ, 'B'); printQ(cQ);
+	printf("\n 삽입 C>>"); enQueue(cQ, 'C'); printQ(cQ);
+	data = peek(cQ); printf(" peek item : %c \n", data);
+
+	printf("\n 삭제 >>"); data = deQueue(cQ); printQ(cQ);
+	printf("\t삭제 데이터 : %c", data);
+	printf("\n 삭제 >>"); data = deQueue(cQ); printQ(cQ);
+	printf("\t삭제 데이터 : %c", data);
+	printf("\n 삭제 >>"); data = deQueue(cQ); printQ(cQ);
+	printf("\t삭제 데이터 : %c", data);
+
+	printf("\n 삽입 D>>"); enQueue(cQ, 'D'); printQ(cQ);
+	printf("\n 삽입 E>>"); enQueue(cQ, 'E'); printQ(cQ);
+
+	free(cQ);
+	
+}
